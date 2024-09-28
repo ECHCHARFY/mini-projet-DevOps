@@ -1,0 +1,58 @@
+
+services:
+  app:
+    build: .
+    ports:
+      - "8083:8083"
+    environment:
+      - DB_URL=jdbc:postgresql://db:5432/projet
+      - DB_USER=root
+      - DB_PASSWORD=root99
+    depends_on:
+      - db
+  filebrowser:
+    image: filebrowser/filebrowser:latest
+    container_name: filebrowser
+    ports:
+      - "8087:80"
+    volumes:
+      - .:/srv
+      - .:/database/filebrowser.db
+      - .:/config/settings.json
+    environment:
+      - FB_BASEURL=/filebrowser
+    restart: unless-stopped
+  db:
+    image: postgres:15
+    ports:
+    - "5432:5432"  
+    environment:
+      POSTGRES_DB: projet
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root99
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    depends_on:
+      - db
+  vscode:
+    image: codercom/code-server:latest
+    environment:
+      PASSWORD: "admin"
+    ports:
+      - "8088:8080"
+    volumes:
+      - ./vscode_data:/home/elmahdi/DevOps_project
+volumes:
+  db_data:
+  postgres_data:
+  vscode_data:
+  filebrowser_data:
