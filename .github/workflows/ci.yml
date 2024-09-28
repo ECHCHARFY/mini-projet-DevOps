@@ -19,10 +19,11 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          java-version: '17'
+          java-version: '11'
+          distribution: 'temurin'  # Ajoute cette ligne
 
       - name: Build
-        run: ./gradlew build # Adapte cette commande si tu utilises un autre système de build.
+        run: ./gradlew build  # Adapte cette commande si tu utilises un autre système de build.
 
       - name: Run tests
-        run: ./gradlew test # Assure-toi que cette commande correspond à tes tests.
+        run: ./gradlew test  # Assure-toi que cette commande correspond à tes tests.
